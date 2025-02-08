@@ -205,7 +205,7 @@ const App = () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "bg-lime-500" : subjectColors[subject.abbreviation]} ${selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : ""}`}
+                  className={`subject border-4 rounded mb-2 ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )}`}
 
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
