@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 
 const App = () => {
   const [timetableData, setTimetableData] = useState([]);
-  const [selectedEntries, setSelectedEntries] = useState(new Set());
-  const [selectedSubjects, setSelectedSubjects] = useState(new Set());
+  const [selectedEntries, setSelectedEntries] = useState(() => {
+    const savedEntries = localStorage.getItem("selectedEntries");
+    return new Set(savedEntries ? JSON.parse(savedEntries) : []);
+  });
+  const [selectedSubjects, setSelectedSubjects] = useState(() => {
+    const savedSubjects = localStorage.getItem("selectedSubjects");
+    return new Set(savedSubjects ? JSON.parse(savedSubjects) : []);
+  });
 
   const timeSlots = [
     "07:15-08:00", "08:00-08:45", "09:00-09:45", "09:45-10:30", "10:45-11:30",
@@ -11,13 +17,22 @@ const App = () => {
     "16:00-16:45", "16:45-17:30", "17:45-18:30", "18:30-19:15",
   ];
 
-  //Random barvy pro každý předmět viz https://tailwindcss.com/docs/colors
+  // Random barvy pro každý předmět viz https://tailwindcss.com/docs/colors
   const subjectColors = {};
   const colors = ["bg-green-800", "bg-fuchsia-500", "bg-orange-500", "bg-yellow-500", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"];
 
+  // Save selected entries to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("selectedEntries", JSON.stringify(Array.from(selectedEntries)));
+  }, [selectedEntries]);
+
+  // Save selected subjects to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("selectedSubjects", JSON.stringify(Array.from(selectedSubjects)));
+  }, [selectedSubjects]);
   
 
-  //Načíst předměty ze složky
+  // Načíst předměty ze složky
   useEffect(() => {
     const loadTimetableData = async () => {
       const files = import.meta.glob("./assets/config/*.json");
@@ -62,7 +77,7 @@ const App = () => {
   };
 
 
-  //Předměty do dní
+  // Předměty do dní
   const groupByDayAndSort = (entries) => {
     const grouped = {
       Pondělí: [],
@@ -86,7 +101,7 @@ const App = () => {
   const pickClass = (entry) => {
     setSelectedEntries((prev) => {
       const newSet = new Set(prev);
-      const key = `${entry.day}-${entry.startTime}-${entry.abbreviation}-${entry.isLecture}-${entry.teacher}`;
+      const key = `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`;
       if (newSet.has(key)) {
         newSet.delete(key);
       } else {
@@ -138,7 +153,7 @@ const App = () => {
   // Hodina se schová pokud je vybrán jiný předmět ve stejnou dobu nebo stejný předmět v jiný čas/den
   const isEntryHidden = (entry) => {
     for (const selectedEntryKey of selectedEntries) {
-      const selectedEntry = allEntries.find(e => `${e.day}-${e.startTime}-${e.abbreviation}-${e.isLecture}-${e.teacher}` === selectedEntryKey);
+      const selectedEntry = allEntries.find(e => `${e.day}//${e.startTime}//${e.abbreviation}//${e.isLecture}//${e.teacher}` === selectedEntryKey);
       if (selectedEntry) {
         if (entry.abbreviation === selectedEntry.abbreviation && entry.isLecture === selectedEntry.isLecture && entry !== selectedEntry) return true;
         if (entry.startTime === selectedEntry.startTime && entry.day === selectedEntry.day && entry !== selectedEntry) return true;
@@ -166,7 +181,7 @@ const App = () => {
             <div className="flex justify-around gap-2 w-full">
               {types.map((type,i) => {
                 const isSelected = Array.from(selectedEntries).some((el) => {
-                  const split = el.split("-");
+                  const split = el.split("//");
                   return split[2] === name && split[3] === (type === "C" ? "false" : "true");
                 });
                 return <div key={name+type+i} className={`inline-block px-2 py ${isSelected ? "bg-lime-500" : "bg-amber-500"}`}>{type}</div>
@@ -192,14 +207,14 @@ const App = () => {
       <div className="flex flex-col gap-4">
         {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day, dayIndex) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
-            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && !isEntryHidden(entry) || selectedEntries.has(`${entry.day}-${entry.startTime}-${entry.abbreviation}-${entry.isLecture}-${entry.teacher}`)
+            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && !isEntryHidden(entry) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
           );
 
           return (
             <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[960px]">
               <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[64px] py-4 flex flex-col justify-center h-full" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
-                const key = `${subject.day}-${subject.startTime}-${subject.abbreviation}-${subject.isLecture}-${subject.teacher}`;
+                const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}`;
                 const isSelected = selectedEntries.has(key);
                 
                 

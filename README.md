@@ -26,7 +26,7 @@ Aplikace zobrazuje rozvrh formou tabulky s dny v týdnu a časovými sloty. Uži
 
 3.  Spusťte vývojový server:
     ```bash
-    npm start
+    npm run dev
     ```
 
 ## Struktura projektu
