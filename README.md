@@ -1,5 +1,7 @@
 # Rozvrh - Výběr Předmětů
 
+[Github pages demo](https://rarach28.github.io/vsb_timetable_picker/)
+
 Tento projekt umožňuje interaktivní výběr a zobrazení rozvrhu. Data rozvrhu jsou načítána z JSON souborů, které obsahují odpovědi API z Edisonu pro každý předmět.
 
 ## Popis
