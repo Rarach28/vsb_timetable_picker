@@ -15,8 +15,8 @@ Aplikace zobrazuje rozvrh formou tabulky s dny v týdnu a časovými sloty. Uži
 
 1.  Naklonujte repozitář:
     ```bash
-    git clone [https://github.com/VášUživatel/NázevRepozitáře.git](https://github.com/VášUživatel/NázevRepozitáře.git)  # Nahraďte svými údaji
-    cd NázevRepozitáře
+    git clone https://github.com/Rarach28/vsb_timetable_picker.git
+    cd vsb_timetable_picker
     ```
 
 2.  Nainstalujte závislosti:
