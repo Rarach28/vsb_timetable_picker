@@ -219,13 +219,8 @@ const App = () => {
             </label>
           </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[64px] h-full pt-2 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
-              {slot.split("-").map((part, i) => (
-                <React.Fragment key={i}>
-                  {part}
-                  {i === 0 && <br />}
-                </React.Fragment>
-              ))}
+            <div key={slot} className={`w-[64px] text-center text-xs col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+              {slot}
             </div>
           ))}
         </div>
@@ -235,7 +230,7 @@ const App = () => {
       <div className="flex flex-col gap-4">
         {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day, dayIndex) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
-            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses && isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
+            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses || !isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
           );
 
           return (
@@ -248,7 +243,7 @@ const App = () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${(isEntryHidden(subject) && showUnusedClasses) && "opacity-25"} `}
+                  className={`subject border-4 rounded mb-2 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${isEntryHidden(subject) && "opacity-25"} `}
                   
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
