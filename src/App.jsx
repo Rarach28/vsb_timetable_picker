@@ -204,7 +204,7 @@ const App = () => {
       </div>
 
       {/* Hodiny */}
-      <div className="flex-col">
+      <div className="flex-col mb-1 border-b-2 border-gray-400">
         <div className="grid grid-cols-15 w-[960px]">
           <div className="col-start-1 col-span-1 w-[64px] row-start-1 bg-gray-700">
             <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
@@ -219,8 +219,13 @@ const App = () => {
             </label>
           </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[64px] text-center text-xs col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
-              {slot}
+            <div key={slot} className={`w-[64px] h-full pt-5 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+              {slot.split("-").map((part, i) => (
+                <React.Fragment key={i}>
+                  {part}
+                  {i === 0 && <br />}
+                </React.Fragment>
+              ))}
             </div>
           ))}
         </div>
