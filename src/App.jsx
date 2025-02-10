@@ -207,7 +207,7 @@ const App = () => {
       <div className="flex flex-col gap-4">
         {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day, dayIndex) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
-            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && !isEntryHidden(entry) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
+            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
           );
 
           return (
@@ -220,8 +220,8 @@ const App = () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )}`}
-
+                  className={`subject border-4 rounded mb-2 select-none ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${isEntryHidden(subject) && "opacity-25"} `}
+                  
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
                     gridColumnEnd: getTimeSlotIndex(subject.startTime.substring(0,5)) + subject.duration,
@@ -233,6 +233,7 @@ const App = () => {
                       className="hidden"
                       checked={isSelected}
                       onChange={() => pickClass(subject)}
+                      disabled={isEntryHidden(subject)}
                     />
                     <b>{subject.abbreviation}</b> - {subject.teacher}
                   </div>
