@@ -11,6 +11,18 @@ const App = () => {
     return new Set(savedSubjects ? JSON.parse(savedSubjects) : []);
   });
 
+  const [showUnusedClasses, setShowUnusedClasses] = useState(
+    localStorage.getItem("showUnusedClasses") === "true"
+  );
+
+  const handleVisibilityOfUnusedClasses = () => {
+    setShowUnusedClasses((prev) => {
+      const newValue = !prev;
+      localStorage.setItem("showUnusedClasses", newValue); // Save new state
+      return newValue;
+    });
+  };
+
   const timeSlots = [
     "07:15-08:00", "08:00-08:45", "09:00-09:45", "09:45-10:30", "10:45-11:30",
     "11:30-12:15", "12:30-13:15", "13:15-14:00", "14:15-15:00", "15:00-15:45",
@@ -194,10 +206,26 @@ const App = () => {
       {/* Hodiny */}
       <div className="flex-col">
         <div className="grid grid-cols-15 w-[960px]">
-          <div className="col-start-1 col-span-1 w-[64px] row-start-1"></div>
+          <div className="col-start-1 col-span-1 w-[64px] row-start-1 bg-gray-700">
+            <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
+              <input
+                type="checkbox"
+                onChange={handleVisibilityOfUnusedClasses}
+                checked={showUnusedClasses}
+                className="sr-only peer block"
+              />
+              <div className="mt-2 relative w-9 h-5 bg-amber-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-lime-300 dark:peer-focus:ring-lime-800 rounded-full peer dark:bg-amber-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-amber-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-amber-600 peer-checked:bg-lime-500 dark:peer-checked:bg-lime-500"></div>
+              <div className="pt-1 text-sm font-medium text-gray-900 dark:text-gray-300 text-center">Show Unused</div>
+            </label>
+          </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[64px] text-center text-xs col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
-              {slot}
+            <div key={slot} className={`w-[64px] h-full pt-2 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+              {slot.split("-").map((part, i) => (
+                <React.Fragment key={i}>
+                  {part}
+                  {i === 0 && <br />}
+                </React.Fragment>
+              ))}
             </div>
           ))}
         </div>
@@ -207,7 +235,7 @@ const App = () => {
       <div className="flex flex-col gap-4">
         {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day, dayIndex) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
-            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && !isEntryHidden(entry) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
+            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses && isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
           );
 
           return (
@@ -220,8 +248,8 @@ const App = () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )}`}
-
+                  className={`subject border-4 rounded mb-2 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${(isEntryHidden(subject) && showUnusedClasses) && "opacity-25"} `}
+                  
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
                     gridColumnEnd: getTimeSlotIndex(subject.startTime.substring(0,5)) + subject.duration,
@@ -233,6 +261,7 @@ const App = () => {
                       className="hidden"
                       checked={isSelected}
                       onChange={() => pickClass(subject)}
+                      disabled={isEntryHidden(subject)}
                     />
                     <b>{subject.abbreviation}</b> - {subject.teacher}
                   </div>
