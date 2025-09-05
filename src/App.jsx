@@ -36,7 +36,7 @@ const App = () => {
 
     if (currentMinutes >= start && currentMinutes < end) {
       const slotProgress = (currentMinutes - start) / (end - start); // Relativní pozice v slotu (0-1)
-      return (i + 1) * 64 + slotProgress * 64; // Posun na správné místo v px
+      return (i + 1) * 74 + slotProgress * 74; // Posun na správné místo v px
     }
   }
   return null;
@@ -51,8 +51,7 @@ const App = () => {
 
   // Random barvy pro každý předmět viz https://tailwindcss.com/docs/colors
   const subjectColors = {};
-  const colors = ["bg-green-800", "bg-fuchsia-500", "bg-orange-500", "bg-yellow-500", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"];
-
+  const colors = ["bg-green-700", "bg-fuchsia-500", "bg-orange-500", "bg-yellow-500", "bg-purple-700", "bg-pink-900", "bg-indigo-500", "bg-violet-900"];
   // Uprava aktualizace time line
   const [currentTimePosition, setCurrentTimePosition] = useState(getCurrentTimePosition());
   useEffect(() => {
@@ -345,16 +344,16 @@ const handleCopyPickScript = async () => {
           <button
             key={name}
             onClick={() => toggleSubject(name)}
-            className={`px-4 py-2 borderrounded ${selectedSubjects.has(name) ? "bg-red-400" : "bg-zinc-700"}`}
+            className={`px-4 py-2 border rounded ${selectedSubjects.has(name) ? "bg-red-400" : "bg-zinc-700"}`}
           >
-            {name}
+            <div className={`font-bold ${subjectColors[name]} rounded mb-2 py-1 px-2`}>{name}</div>
             <div className="flex justify-around gap-2 w-full">
               {types.map((type,i) => {
                 const isSelected = Array.from(selectedEntries).some((el) => {
                   const split = el.split("//");
                   return split[2] === name && split[3] === (type === "C" ? "false" : "true");
                 });
-                return <div key={name+type+i} className={`inline-block px-2 py ${isSelected ? "bg-lime-500" : "bg-amber-500"}`}>{type}</div>
+                return <div key={name+type+i} className={`inline-block px-2 py rounded ${type === "C" ? (isSelected ? "bg-blue-500" : "text-blue-500") + " border-1 border-blue-500" : (isSelected ? "bg-red-500" : "text-red-500") + " border-1 border-red-500"}`}>{type}</div>
               })}
             </div>
           </button>
@@ -363,8 +362,8 @@ const handleCopyPickScript = async () => {
 
       {/* Hodiny */}
       <div className="flex-col mb-1">
-        <div className="grid grid-cols-15 w-[960px]">
-          <div className="col-start-1 col-span-1 w-[64px] row-start-1 bg-gray-700">
+        <div className="grid grid-cols-15 w-[1100px]">
+          <div className="col-start-1 col-span-1 w-[70px] row-start-1 bg-gray-700">
             <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
               <input
                 type="checkbox"
@@ -377,7 +376,7 @@ const handleCopyPickScript = async () => {
             </label>
           </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[64px] h-full pt-5 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+            <div key={slot} className={`w-[74px] h-full pt-5 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
               {slot.split("-").map((part, i) => (
                 <React.Fragment key={i}>
                   {part}
@@ -390,7 +389,7 @@ const handleCopyPickScript = async () => {
       </div>
 
       {/* Rozvrh (OP) */}
-      <div className="relative flex flex-col gap-4">
+      <div className="relative flex flex-col gap-1">
         {/* Time Line */}
         {currentTimePosition && (
                 <div
@@ -406,8 +405,8 @@ const handleCopyPickScript = async () => {
           );
 
           return (
-            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[960px]">
-              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[64px] py-4 flex flex-col justify-center h-full" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
+            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px]">
+              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
                 const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}`;
                 const isSelected = selectedEntries.has(key);
@@ -415,14 +414,14 @@ const handleCopyPickScript = async () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 overflow-hidden ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-amber-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${isEntryHidden(subject) && "opacity-25"} `}
-                  
+                  className={`subject m-[3px] border-4 rounded-xl cursor-pointer overflow-hidden ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600 bg-red-700 hover:!bg-red-500" : "border-sky-600 bg-sky-700 hover:bg-sky-500"} ${isSelected ? `!border-lime-500` : ""} ${isEntryHidden(subject) && "opacity-25"} ${isSelected && subject.isLecture ? "!bg-red-600" : ""} ${isSelected && !subject.isLecture ? "!bg-sky-600" : ""}`}
+
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
                     gridColumnEnd: getTimeSlotIndex(subject.startTime.substring(0,5)) + subject.duration,
                   }}
                 >
-                  <div className="px-2 py">
+                  <div className="px-2 py flex flex-col">
                     <input
                       type="checkbox"
                       className="hidden"
@@ -430,7 +429,8 @@ const handleCopyPickScript = async () => {
                       onChange={() => pickClass(subject)}
                       disabled={isEntryHidden(subject)}
                     />
-                    <b>{subject.abbreviation}</b> - {subject.teacher}
+                    <span className={`font-bold w-fit px-[9px] py-[3px] mt-2 mb-1 rounded-full ${selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation]}`}>{subject.abbreviation}</span>
+                    <span className="text-base my-1">{subject.teacher}</span>
                   </div>
                 </label>
               })}
