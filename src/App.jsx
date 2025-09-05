@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { copyPickScript } from "./lib/pickScript";
 
 const App = () => {
   const [timetableData, setTimetableData] = useState([]);
@@ -23,6 +24,25 @@ const App = () => {
     });
   };
 
+  const getCurrentTimePosition = () => {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  for (let i = 0; i < timeSlots.length; i++) {
+    const [start, end] = timeSlots[i].split("-").map((t) => {
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m; // Převod na minuty
+    });
+
+    if (currentMinutes >= start && currentMinutes < end) {
+      const slotProgress = (currentMinutes - start) / (end - start); // Relativní pozice v slotu (0-1)
+      return (i + 1) * 64 + slotProgress * 64; // Posun na správné místo v px
+    }
+  }
+  return null;
+};
+
+
   const timeSlots = [
     "07:15-08:00", "08:00-08:45", "09:00-09:45", "09:45-10:30", "10:45-11:30",
     "11:30-12:15", "12:30-13:15", "13:15-14:00", "14:15-15:00", "15:00-15:45",
@@ -32,6 +52,17 @@ const App = () => {
   // Random barvy pro každý předmět viz https://tailwindcss.com/docs/colors
   const subjectColors = {};
   const colors = ["bg-green-800", "bg-fuchsia-500", "bg-orange-500", "bg-yellow-500", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"];
+
+  // Uprava aktualizace time line
+  const [currentTimePosition, setCurrentTimePosition] = useState(getCurrentTimePosition());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTimePosition(getCurrentTimePosition());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   // Save selected entries to localStorage whenever they change
   useEffect(() => {
@@ -63,6 +94,8 @@ const App = () => {
     loadTimetableData();
   }, []);
 
+  //302358
+  // item.dto.concreteActivityId
 
   const formatSchedule = (scheduleTable) => {
     const formatted = [];
@@ -79,6 +112,7 @@ const App = () => {
               abbreviation: item.dto.subjectAbbrev,
               isLecture: item.dto.lecture,
               duration: item.duration || 2,
+              activityId: item.dto.concreteActivityId
             });
           }
         });
@@ -135,6 +169,7 @@ const App = () => {
     });
   };
 
+  console.log(timetableData)
   // Zformátování dat a přidání barvy
   const allEntries = timetableData
     .map(({ data }) => formatSchedule(data.subjectScheduleTable))
@@ -178,11 +213,134 @@ const App = () => {
     return timeSlots.findIndex(slot => slot.startsWith(time)) + 2;
   }
 
+  // Generate pick script from current selection
+  const generatePickScript = () => {
+    const subjects_array = {};
+    const subject_map = [];
+    
+    // Extract selected entries and group by subject
+    const selectedData = Array.from(selectedEntries).map(key => {
+      return allEntries.find(entry => 
+        `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}` === key
+      );
+    }).filter(Boolean);
+
+    // Build subjects_array and subject_map
+    selectedData.forEach(entry => {
+      // Extract subjectId from filename pattern: subjectId__*.json
+      const matchingFile = timetableData.find(item => 
+        item.title.includes(entry.abbreviation)
+      );
+      
+      if (matchingFile) {
+        const subjectId = matchingFile.title.split('__')[0];
+        console.log(matchingFile,subjectId);
+        const concreteActivityId = entry.activityId.toString();
+        
+        if (!subjects_array[subjectId]) {
+          subjects_array[subjectId] = [];
+          subject_map.push(subjectId);
+        }
+        
+        if (!subjects_array[subjectId].includes(concreteActivityId)) {
+          subjects_array[subjectId].push(concreteActivityId);
+        }
+      }
+    });
+
+    // Generate the script
+    const scriptContent = `(function () {
+
+    let current_subject_idx = 0;
+
+    const readyToclickEvent = new Event('readyToClick');
+
+    var subjects = $('#ns_Z7_SHD09B1A084V90ITII3I3Q30P7_\\\\:subjectsTable a');
+
+    var subjects_array = ${JSON.stringify(subjects_array, null, 8).replace(/"/g, "'")};
+
+    var subject_map = ${JSON.stringify(subject_map).replace(/"/g, "'")}
+
+    function subjectClick(subjectId) {
+        for (var subject = 0; subject < subjects.length; subject++) {
+            if (subjects[subject].attributes.onclick.nodeValue === 'return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectStudyYearObligation(' + subjectId + ');') {
+                subjects[subject].click();
+                console.log('Subject:', subjectId);
+            }
+        }
+    }
+
+    function timeClick(timeId) {
+        var times = $('#ns_Z7_SHD09B1A084V90ITII3I3Q30P7_\\\\:subjectScheduleDiv a');
+        for (var time = 0; time < times.length; time++) {
+            if (times[time].attributes.onclick.nodeValue === 'return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectConcreteActivity(' + timeId + ');') {
+                times[time].click();
+                console.log('Vybrano cviceni:', timeId);
+            }
+        }
+    }
+
+    function waitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+
+    document.body.addEventListener('readyToClick', (e) => {
+        setTimeout(() => {
+            subjectClick(subject_map[current_subject_idx]);
+            waitForElm("a[onclick='return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectConcreteActivity(" + subjects_array[subject_map[current_subject_idx]][0] + ");']")
+                .then((elm) => {
+                    setTimeout(() => {
+                        timeClick(subjects_array[subject_map[current_subject_idx]][0]);
+                        current_subject_idx++;
+                        if (current_subject_idx < subject_map.length) {
+                            document.body.dispatchEvent(readyToclickEvent);
+                        }
+                    }, 150);
+                });
+        }, 150);
+    }, false);
+
+    document.body.dispatchEvent(readyToclickEvent);
+
+}());`;
+
+    return scriptContent;
+  }
+
+const handleCopyPickScript = async () => {
+  const ok = await copyPickScript(selectedEntries, allEntries, timetableData);
+  if (ok) alert('Pick script zkopírován do schránky!');
+};
+
   return (
     <div className="flex-1 container mx-auto p-4">
 
+      {/* Kopírovat Pick Script */}
+      <div className="mb-4 w-[960px]">
+        <button
+          onClick={handleCopyPickScript}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+        >
+          Zkopírovat Pick Script
+        </button>
+      </div>
+
       {/* Karty předmětů */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 w-[960px] overflow-auto">
         {Object.entries(subjectTypesMap).map(([name, types]) => (
           <button
             key={name}
@@ -204,7 +362,7 @@ const App = () => {
       </div>
 
       {/* Hodiny */}
-      <div className="flex-col mb-1 border-b-2 border-gray-400">
+      <div className="flex-col mb-1">
         <div className="grid grid-cols-15 w-[960px]">
           <div className="col-start-1 col-span-1 w-[64px] row-start-1 bg-gray-700">
             <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
@@ -232,8 +390,17 @@ const App = () => {
       </div>
 
       {/* Rozvrh (OP) */}
-      <div className="flex flex-col gap-4">
-        {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day, dayIndex) => {
+      <div className="relative flex flex-col gap-4">
+        {/* Time Line */}
+        {currentTimePosition && (
+                <div
+                  className="absolute h-full w-1 bg-red-500"
+                  style={{
+                    left: `${(currentTimePosition - 1) }px`,
+                  }}
+                />
+              )}
+        {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
             (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses || !isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
           );
@@ -248,7 +415,7 @@ const App = () => {
                 
                 return <label
                   key={index}
-                  className={`subject border-4 rounded mb-2 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${isEntryHidden(subject) && "opacity-25"} `}
+                  className={`subject border-4 rounded mb-2 overflow-hidden ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-amber-600" : "border-sky-600"} ${isSelected ? "!bg-lime-500" : ( selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation] )} ${isEntryHidden(subject) && "opacity-25"} `}
                   
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
