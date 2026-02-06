@@ -395,7 +395,7 @@ const handleCopyPickScript = async () => {
                 <div
                   className="absolute h-full w-1 bg-red-500"
                   style={{
-                    left: `${(currentTimePosition - 1) }px`,
+                    left: `${(currentTimePosition - 8) }px`,
                   }}
                 />
               )}
