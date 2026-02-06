@@ -104,6 +104,7 @@ const App = () => {
         queue.items.forEach((item) => {
           if (item.used && item.dto) {
             formatted.push({
+              title: item.dto.subjectTitle,
               day: day.title,
               startTime: item.dto.scheduleWindowBeginTime,
               endTime: item.dto.scheduleWindowEndTime,
@@ -111,7 +112,8 @@ const App = () => {
               abbreviation: item.dto.subjectAbbrev,
               isLecture: item.dto.lecture,
               duration: item.duration || 2,
-              activityId: item.dto.concreteActivityId
+              activityId: item.dto.concreteActivityId,
+              educationWeekTitle: (item.dto.educationWeekTitle === "Lichý" || item.dto.educationWeekTitle === "Sudý") ? item.dto.educationWeekTitle : null,
             });
           }
         });
@@ -146,7 +148,7 @@ const App = () => {
   const pickClass = (entry) => {
     setSelectedEntries((prev) => {
       const newSet = new Set(prev);
-      const key = `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`;
+      const key = `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}//${entry.educationWeekTitle}`;
       if (newSet.has(key)) {
         newSet.delete(key);
       } else {
@@ -199,7 +201,7 @@ const App = () => {
   // Hodina se schová pokud je vybrán jiný předmět ve stejnou dobu nebo stejný předmět v jiný čas/den
   const isEntryHidden = (entry) => {
     for (const selectedEntryKey of selectedEntries) {
-      const selectedEntry = allEntries.find(e => `${e.day}//${e.startTime}//${e.abbreviation}//${e.isLecture}//${e.teacher}` === selectedEntryKey);
+      const selectedEntry = allEntries.find(e => `${e.day}//${e.startTime}//${e.abbreviation}//${e.isLecture}//${e.teacher}//${e.educationWeekTitle}` === selectedEntryKey);
       if (selectedEntry) {
         if (entry.abbreviation === selectedEntry.abbreviation && entry.isLecture === selectedEntry.isLecture && entry !== selectedEntry) return true;
         if (entry.startTime === selectedEntry.startTime && entry.day === selectedEntry.day && entry !== selectedEntry) return true;
@@ -220,7 +222,7 @@ const App = () => {
     // Extract selected entries and group by subject
     const selectedData = Array.from(selectedEntries).map(key => {
       return allEntries.find(entry => 
-        `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}` === key
+        `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}//${entry.educationWeekTitle}` === key
       );
     }).filter(Boolean);
 
@@ -401,14 +403,14 @@ const handleCopyPickScript = async () => {
               )}
         {["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek"].map((day) => {
           const dayEntries = groupedByDay[day].filter((entry) =>
-            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses || !isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}`)
+            (selectedSubjects.size === 0 || selectedSubjects.has(entry.abbreviation)) && (showUnusedClasses || !isEntryHidden(entry)) || selectedEntries.has(`${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}//${entry.educationWeekTitle}`)
           );
 
           return (
             <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px]">
               <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
-                const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}`;
+                const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}//${subject.educationWeekTitle}`;
                 const isSelected = selectedEntries.has(key);
                 
                 
@@ -429,8 +431,13 @@ const handleCopyPickScript = async () => {
                       onChange={() => pickClass(subject)}
                       disabled={isEntryHidden(subject)}
                     />
-                    <span className={`font-bold w-fit px-[9px] py-[3px] mt-2 mb-1 rounded-full ${selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation]}`}>{subject.abbreviation}</span>
-                    <span className="text-base my-1">{subject.teacher}</span>
+                    <span className="flex justify-between items-center mt-2 mb-1">
+                      <span title={subject.title} className={`font-bold w-fit px-[9px] py-[3px] rounded-full ${selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation]}`}>{subject.abbreviation}</span>
+                      {subject.educationWeekTitle &&
+                        <span className={`font-bold px-[11px] py-[3px] rounded-full ${subject.educationWeekTitle === "Lichý" ? "bg-rose-600" : "bg-emerald-600"}`} title={subject.educationWeekTitle}>{subject.educationWeekTitle.charAt(0)}</span>
+                      }
+                    </span>
+                    <span className="text-base my-1 truncate" title={subject.teacher}>{subject.teacher}</span>
                   </div>
                 </label>
               })}
