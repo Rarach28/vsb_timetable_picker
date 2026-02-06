@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-src/assets/
+src/assets/old/
 src/lib/pickScript.js
