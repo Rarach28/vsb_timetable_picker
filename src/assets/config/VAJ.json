@@ -1,0 +1,700 @@
+{
+    "subjectTitle": "Vývoj aplikací v JavaScriptu",
+    "subjectScheduleTable": {
+        "days": [
+            {
+                "queuesNumberString": "1",
+                "last": false,
+                "queues": [
+                    {
+                        "items": [
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            }
+                        ],
+                        "first": true
+                    }
+                ],
+                "queuesNumber": 1,
+                "abbrev": "Po",
+                "title": "Pondělí"
+            },
+            {
+                "queuesNumberString": "1",
+                "last": false,
+                "queues": [
+                    {
+                        "items": [
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            }
+                        ],
+                        "first": true
+                    }
+                ],
+                "queuesNumber": 1,
+                "abbrev": "Út",
+                "title": "Úterý"
+            },
+            {
+                "queuesNumberString": "1",
+                "last": false,
+                "queues": [
+                    {
+                        "items": [
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": 1,
+                                "pad": false,
+                                "used": true,
+                                "dto": {
+                                    "next": false,
+                                    "educationTypeTitle": "přednášky",
+                                    "subjectAbbrev": "VAJ",
+                                    "concreteActivityVersionId": 0,
+                                    "weekDayTitle": "Středa",
+                                    "studyGroupCodesString": "LB3INF06, LB3INF07, LB3INF08",
+                                    "subjectId": 43948,
+                                    "roomFullCodesString": "POREC2",
+                                    "studentsCount": 0,
+                                    "concreteActivityMsTeamsLink": null,
+                                    "practise": false,
+                                    "scheduleWindowId": 10,
+                                    "everyWeek": true,
+                                    "concreteActivityDuration": 1,
+                                    "subjectVersionScheduleCode": "460207701",
+                                    "concreteActivityId": 320737,
+                                    "teacherShortNamesString": "D. Paušly, P. Večeřa",
+                                    "lecture": true,
+                                    "concreteActivityMsTeamsGroupId": null,
+                                    "scheduleWindowBeginTime": "15:00:00",
+                                    "canLoggedPersonChangeCapacity": null,
+                                    "selected": false,
+                                    "subjectVersionId": 65253,
+                                    "scheduleWindowEndTime": "15:45:00",
+                                    "subjectTitle": "Vývoj aplikací v JavaScriptu",
+                                    "concreteActivityCode": "460207701P/01",
+                                    "concreteActivityTemplate": "P",
+                                    "teacherLoginsString": "PAU0026, VEC0022",
+                                    "concreteActivityCapacity": 125,
+                                    "educationTypeId": 1,
+                                    "weekDayAbbrev": "St",
+                                    "concreteActivityOrder": 1,
+                                    "semesterId": 131,
+                                    "teacherFullNamesString": "Bc. Dušan Paušly, Bc. Petr Večeřa",
+                                    "hasFreePlaces": true,
+                                    "teacherShortNamesAbbrev": "D. Paušly, P. Večeřa",
+                                    "educationWeekId": 1,
+                                    "consultation": false,
+                                    "educationWeekTitle": "Každý",
+                                    "scheduleWindowOrder": 9,
+                                    "weekDayId": 3,
+                                    "hasCollision": false,
+                                    "loggedPersonTeacher": null
+                                },
+                                "durationString": "1"
+                            },
+                            {
+                                "duration": 2,
+                                "pad": false,
+                                "used": true,
+                                "dto": {
+                                    "next": false,
+                                    "educationTypeTitle": "cvičení",
+                                    "subjectAbbrev": "VAJ",
+                                    "concreteActivityVersionId": 0,
+                                    "weekDayTitle": "Středa",
+                                    "studyGroupCodesString": "LB3INF06",
+                                    "subjectId": 43948,
+                                    "roomFullCodesString": "POREB213",
+                                    "studentsCount": 0,
+                                    "concreteActivityMsTeamsLink": null,
+                                    "practise": true,
+                                    "scheduleWindowId": 11,
+                                    "everyWeek": true,
+                                    "concreteActivityDuration": 2,
+                                    "subjectVersionScheduleCode": "460207701",
+                                    "concreteActivityId": 320735,
+                                    "teacherShortNamesString": "D. Paušly, P. Večeřa",
+                                    "lecture": false,
+                                    "concreteActivityMsTeamsGroupId": null,
+                                    "scheduleWindowBeginTime": "16:00:00",
+                                    "canLoggedPersonChangeCapacity": null,
+                                    "selected": false,
+                                    "subjectVersionId": 65253,
+                                    "scheduleWindowEndTime": "16:45:00",
+                                    "subjectTitle": "Vývoj aplikací v JavaScriptu",
+                                    "concreteActivityCode": "460207701C/01",
+                                    "concreteActivityTemplate": "C",
+                                    "teacherLoginsString": "PAU0026, VEC0022",
+                                    "concreteActivityCapacity": 30,
+                                    "educationTypeId": 2,
+                                    "weekDayAbbrev": "St",
+                                    "concreteActivityOrder": 1,
+                                    "semesterId": 131,
+                                    "teacherFullNamesString": "Bc. Dušan Paušly, Bc. Petr Večeřa",
+                                    "hasFreePlaces": true,
+                                    "teacherShortNamesAbbrev": "D. Paušly, P. Večeřa",
+                                    "educationWeekId": 1,
+                                    "consultation": false,
+                                    "educationWeekTitle": "Každý",
+                                    "scheduleWindowOrder": 10,
+                                    "weekDayId": 3,
+                                    "hasCollision": false,
+                                    "loggedPersonTeacher": null
+                                },
+                                "durationString": "2"
+                            },
+                            {
+                                "duration": null,
+                                "pad": true,
+                                "used": true,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": 2,
+                                "pad": false,
+                                "used": true,
+                                "dto": {
+                                    "next": false,
+                                    "educationTypeTitle": "cvičení",
+                                    "subjectAbbrev": "VAJ",
+                                    "concreteActivityVersionId": 0,
+                                    "weekDayTitle": "Středa",
+                                    "studyGroupCodesString": "LB3INF07, LB3INF08",
+                                    "subjectId": 43948,
+                                    "roomFullCodesString": "POREB213",
+                                    "studentsCount": 0,
+                                    "concreteActivityMsTeamsLink": null,
+                                    "practise": true,
+                                    "scheduleWindowId": 13,
+                                    "everyWeek": true,
+                                    "concreteActivityDuration": 2,
+                                    "subjectVersionScheduleCode": "460207701",
+                                    "concreteActivityId": 320736,
+                                    "teacherShortNamesString": "D. Paušly, P. Večeřa",
+                                    "lecture": false,
+                                    "concreteActivityMsTeamsGroupId": null,
+                                    "scheduleWindowBeginTime": "17:45:00",
+                                    "canLoggedPersonChangeCapacity": null,
+                                    "selected": false,
+                                    "subjectVersionId": 65253,
+                                    "scheduleWindowEndTime": "18:30:00",
+                                    "subjectTitle": "Vývoj aplikací v JavaScriptu",
+                                    "concreteActivityCode": "460207701C/02",
+                                    "concreteActivityTemplate": "C",
+                                    "teacherLoginsString": "PAU0026, VEC0022",
+                                    "concreteActivityCapacity": 30,
+                                    "educationTypeId": 2,
+                                    "weekDayAbbrev": "St",
+                                    "concreteActivityOrder": 2,
+                                    "semesterId": 131,
+                                    "teacherFullNamesString": "Bc. Dušan Paušly, Bc. Petr Večeřa",
+                                    "hasFreePlaces": true,
+                                    "teacherShortNamesAbbrev": "D. Paušly, P. Večeřa",
+                                    "educationWeekId": 1,
+                                    "consultation": false,
+                                    "educationWeekTitle": "Každý",
+                                    "scheduleWindowOrder": 12,
+                                    "weekDayId": 3,
+                                    "hasCollision": false,
+                                    "loggedPersonTeacher": null
+                                },
+                                "durationString": "2"
+                            },
+                            {
+                                "duration": null,
+                                "pad": true,
+                                "used": true,
+                                "dto": null,
+                                "durationString": null
+                            }
+                        ],
+                        "first": true
+                    }
+                ],
+                "queuesNumber": 1,
+                "abbrev": "St",
+                "title": "Středa"
+            },
+            {
+                "queuesNumberString": "1",
+                "last": false,
+                "queues": [
+                    {
+                        "items": [
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            }
+                        ],
+                        "first": true
+                    }
+                ],
+                "queuesNumber": 1,
+                "abbrev": "Čt",
+                "title": "Čtvrtek"
+            },
+            {
+                "queuesNumberString": "1",
+                "last": true,
+                "queues": [
+                    {
+                        "items": [
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            },
+                            {
+                                "duration": null,
+                                "pad": false,
+                                "used": false,
+                                "dto": null,
+                                "durationString": null
+                            }
+                        ],
+                        "first": true
+                    }
+                ],
+                "queuesNumber": 1,
+                "abbrev": "Pá",
+                "title": "Pátek"
+            }
+        ]
+    },
+    "hasStudyPlan": true
+}
