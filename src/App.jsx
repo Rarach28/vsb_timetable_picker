@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { copyPickScript } from "./lib/pickScript";
+import { openRoomMap } from "./lib/roomMapper";
 import ImportPanel from "./components/ImportPanel";
 
 const App = () => {
@@ -178,6 +179,7 @@ const App = () => {
               isLecture: item.dto.lecture,
               duration: item.duration || 2,
               activityId: item.dto.concreteActivityId,
+              room: item.dto.roomFullCodesString || null,
               educationWeekTitle: (item.dto.educationWeekTitle === "Lichý" || item.dto.educationWeekTitle === "Sudý") ? item.dto.educationWeekTitle : null,
             });
           }
@@ -319,7 +321,7 @@ const App = () => {
   return (
     <div className="flex-1 container p-4">
       {/* Kopírovat Pick Script */}
-      <div className="mb-4 w-[960px]">
+      <div className="mb-4 w-[1470px]">
         <button
           onClick={handleCopyPickScript}
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
@@ -336,7 +338,7 @@ const App = () => {
       )}
 
       {/* Import z Edisonu */}
-      <div className="w-[960px]">
+      <div className="w-[1470px]">
         <ImportPanel
           importedData={importedData}
           onImport={handleImport}
@@ -354,7 +356,7 @@ const App = () => {
         )}
 
       {/* Karty předmětů */}
-      <div className="flex flex-wrap gap-3 mb-4 w-[960px]">
+      <div className="flex flex-wrap gap-3 mb-4 w-[1470px]">
         {Object.entries(subjectTypesMap).map(([name, types]) => (
           <button
             key={name}
@@ -376,9 +378,9 @@ const App = () => {
       </div>
 
       {/* Hodiny */}
-      <div className="flex-col mb-1">
-        <div className="grid grid-cols-15 w-[1100px] rounded-lg overflow-hidden">
-          <div className="col-start-1 col-span-1 w-[70px] row-start-1 bg-gray-700">
+      <div className="flex-col mb-2">
+        <div className="grid grid-cols-15 w-[1470px] rounded-lg overflow-hidden">
+          <div className="col-start-1 col-span-1 w-[90px] row-start-1 bg-gray-700">
             <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
               <input
                 type="checkbox"
@@ -391,7 +393,7 @@ const App = () => {
             </label>
           </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[74px] h-full pt-5 text-center text-sm font-semibold col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+            <div key={slot} className={`w-[100px] h-full pt-5 text-center text-sm font-semibold col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
               {slot.split("-").map((part, i) => (
                 <React.Fragment key={i}>
                   {part}
@@ -404,7 +406,7 @@ const App = () => {
       </div>
 
       {/* Rozvrh (OP) */}
-      <div className="relative flex flex-col gap-1">
+      <div className="relative flex flex-col gap-2">
         {/* Time Line */}
         {currentTimePosition && (
                 <div
@@ -420,8 +422,8 @@ const App = () => {
           );
 
           return (
-            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px] rounded-lg">
-              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full rounded-l-lg text-xl font-bold" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
+            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1470px] rounded-lg">
+              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] flex flex-col justify-center h-full rounded-l-lg text-xl font-bold" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
                 const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}//${subject.educationWeekTitle}`;
                 const isSelected = selectedEntries.has(key);
@@ -451,6 +453,15 @@ const App = () => {
                       }
                     </span>
                     <span className="text-base my-1 truncate" title={subject.teacher}>{subject.teacher}</span>
+                    {subject.room && (
+                      <span
+                        className="text-xs w-fit font-bold hover:text-blue-300 hover:underline cursor-pointer truncate mb-1"
+                        title={`Zobrazit ${subject.room} na mapě`}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); openRoomMap(subject.room); }}
+                      >
+                      {subject.room}
+                      </span>
+                    )}
                   </div>
                 </label>
               })}

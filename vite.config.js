@@ -6,4 +6,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react(), tailwindcss(),],
   base: '/vsb_timetable_picker/',
+  server: {
+    proxy: {
+      '/mapy-api': {
+        target: 'https://mapy.vsb.cz',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/mapy-api/, '/maps/api'),
+      },
+    },
+  },
 })
