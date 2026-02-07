@@ -328,7 +328,7 @@ const handleCopyPickScript = async () => {
 };
 
   return (
-    <div className="flex-1 container mx-auto p-4">
+    <div className="flex-1 container p-4">
 
       {/* Kopírovat Pick Script */}
       <div className="mb-4 w-[960px]">
@@ -341,21 +341,21 @@ const handleCopyPickScript = async () => {
       </div>
 
       {/* Karty předmětů */}
-      <div className="flex flex-wrap gap-2 mb-4 w-[960px] overflow-auto">
+      <div className="flex flex-wrap gap-3 mb-4 w-[960px]">
         {Object.entries(subjectTypesMap).map(([name, types]) => (
           <button
             key={name}
             onClick={() => toggleSubject(name)}
-            className={`px-4 py-2 border rounded ${selectedSubjects.has(name) ? "bg-red-400" : "bg-zinc-700"}`}
+            className={`min-w-[105px] px-4 py-2 border rounded bg-zinc-700 ring-3 ${selectedSubjects.has(name) ? "ring-indigo-400" : "ring-gray-600"}`}
           >
-            <div className={`font-bold ${subjectColors[name]} rounded mb-2 py-1 px-2`}>{name}</div>
-            <div className="flex justify-around gap-2 w-full">
+            <div className={`font-bold ${subjectColors[name]} rounded my-2 py-1 px-2`}>{name}</div>
+            <div className="flex justify-around gap-2 w-full mb-2">
               {types.map((type,i) => {
                 const isSelected = Array.from(selectedEntries).some((el) => {
                   const split = el.split("//");
                   return split[2] === name && split[3] === (type === "C" ? "false" : "true");
                 });
-                return <div key={name+type+i} className={`inline-block px-2 py rounded ${type === "C" ? (isSelected ? "bg-blue-500" : "text-blue-500") + " border-1 border-blue-500" : (isSelected ? "bg-red-500" : "text-red-500") + " border-1 border-red-500"}`}>{type}</div>
+                return <div key={name+type+i} className={`inline-block w-[28px] rounded ${type === "C" ? (isSelected ? "bg-blue-500" : "text-blue-500") + " border-1 border-blue-500" : (isSelected ? "bg-red-500" : "text-red-500") + " border-1 border-red-500"}`}>{type}</div>
               })}
             </div>
           </button>
@@ -364,7 +364,7 @@ const handleCopyPickScript = async () => {
 
       {/* Hodiny */}
       <div className="flex-col mb-1">
-        <div className="grid grid-cols-15 w-[1100px]">
+        <div className="grid grid-cols-15 w-[1100px] rounded-lg overflow-hidden">
           <div className="col-start-1 col-span-1 w-[70px] row-start-1 bg-gray-700">
             <label className="inline-flex items-center cursor-pointer flex-col justify-center items-center w-full mb-3">
               <input
@@ -407,8 +407,8 @@ const handleCopyPickScript = async () => {
           );
 
           return (
-            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px]">
-              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
+            <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px] rounded-lg">
+              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full rounded-l-lg" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
                 const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}//${subject.educationWeekTitle}`;
                 const isSelected = selectedEntries.has(key);
@@ -416,7 +416,7 @@ const handleCopyPickScript = async () => {
                 
                 return <label
                   key={index}
-                  className={`subject m-[3px] border-4 rounded-xl cursor-pointer overflow-hidden ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600 bg-red-700 hover:!bg-red-500" : "border-sky-600 bg-sky-700 hover:bg-sky-500"} ${isSelected ? `!border-lime-500` : ""} ${isEntryHidden(subject) && "opacity-25"} ${isSelected && subject.isLecture ? "!bg-red-600" : ""} ${isSelected && !subject.isLecture ? "!bg-sky-600" : ""}`}
+                  className={`subject m-[3px] border-4 rounded-xl cursor-pointer overflow-hidden transition-colors duration-100 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600 bg-red-700 hover:!bg-red-500" : "border-sky-600 bg-sky-700 hover:!bg-sky-500"} ${isSelected ? `!border-lime-500` : ""} ${isEntryHidden(subject) && "opacity-25"} ${isSelected && subject.isLecture ? "!bg-red-600" : ""} ${isSelected && !subject.isLecture ? "!bg-sky-600" : ""}`}
 
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
