@@ -40,12 +40,35 @@ Aplikace zobrazuje rozvrh formou tabulky s dny v týdnu a časovými sloty. Uži
 
 ## Použití
 
-1.  Po spuštění aplikace se zobrazí rozvrh.
-2.  Kliknutím na název předmětu v horní části obrazovky se zobrazí/skryjí všechny hodiny daného předmětu.
-3.  Kliknutím na konkrétní hodinu v rozvrhu se tato hodina vybere/odznačí. Vybrané hodiny jsou zvýrazněny.
-4.  Rozvrh se automaticky filtruje podle vybraných předmětů a hodin.
+1.  Po spuštění aplikace se zobrazí ukázkový rozvrh.
+2.  Pro načtení vlastního rozvrhu klikněte na **Import z Edisonu** (viz sekce Import níže).
+3.  Kliknutím na název předmětu v horní části obrazovky se zobrazí/skryjí všechny hodiny daného předmětu.
+4.  Kliknutím na konkrétní hodinu v rozvrhu se tato hodina vybere/odznačí. Vybrané hodiny jsou zvýrazněny.
+5.  Rozvrh se automaticky filtruje podle vybraných předmětů a hodin.
 
-## Úprava
+## Import dat z Edisonu
+
+### Automatický import (doporučeno)
+
+1.  V aplikaci klikněte na **Import z Edisonu** → **Automatický import**
+2.  Zkopírujte zobrazený script
+3.  Otevřete [Edison](https://edison.vsb.cz) → Rozvrh → Volba rozvrhu
+4.  Otevřete konzoli prohlížeče (`Ctrl+Shift+J` / `Cmd+Option+J`)
+5.  Vložte script do konzole a stiskněte Enter
+6.  Script automaticky projde všechny předměty, sebere data a otevře aplikaci s naimportovaným rozvrhem
+
+### Ruční import
+
+Pokud automatický import nefunguje (např. blokovaný popup):
+
+1.  Přihlaste se do Edisonu → Rozvrh → Volba rozvrhu
+2.  V dev tools (`Ctrl+Shift+I`) → karta Network
+3.  Klikněte na předmět — zkopírujte Response z AJAX volání
+4.  Uložte jako `.json` soubor a nahrajte přes **Import z Edisonu** → uploader v aplikaci
+
+Data můžete také nahrát přes drag & drop nebo vložit ze schránky (pokud script zkopíroval data do schránky jako fallback).
+
+## Úprava (pro vývojáře)
 
 1. Přihlaste se do Edisonu a přejděte do Rozvrh > Volba rozvrhu
 2. V dev tools (`Cmd + Option + I` / `Ctrl + Shift + I`) najděte 9. `display:none` a element zobrazte

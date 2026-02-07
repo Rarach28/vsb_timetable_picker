@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { copyPickScript } from "./lib/pickScript";
+import ImportPanel from "./components/ImportPanel";
 
 const App = () => {
   const [timetableData, setTimetableData] = useState([]);
@@ -11,6 +12,15 @@ const App = () => {
     const savedSubjects = localStorage.getItem("selectedSubjects");
     return new Set(savedSubjects ? JSON.parse(savedSubjects) : []);
   });
+
+  const [importedData, setImportedData] = useState(() => {
+    try {
+      const saved = localStorage.getItem("importedSubjects");
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+
+  const [importNotification, setImportNotification] = useState(null);
 
   const [showUnusedClasses, setShowUnusedClasses] = useState(
     localStorage.getItem("showUnusedClasses") === "true"
@@ -72,10 +82,60 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("selectedSubjects", JSON.stringify(Array.from(selectedSubjects)));
   }, [selectedSubjects]);
-  
 
-  // Načíst předměty ze složky
+  // Save imported data to localStorage whenever it changes
   useEffect(() => {
+    localStorage.setItem("importedSubjects", JSON.stringify(importedData));
+  }, [importedData]);
+
+  // --- postMessage listener for Edison scraper import ---
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data && event.data.type === 'edison-data' && Array.isArray(event.data.subjects)) {
+        const subjects = event.data.subjects.filter(
+          s => s.title && s.data && s.data.subjectScheduleTable && Array.isArray(s.data.subjectScheduleTable.days)
+        );
+        if (subjects.length > 0) {
+          setImportedData(subjects);
+          setSelectedEntries(new Set());
+          setSelectedSubjects(new Set());
+          setImportNotification(`Importováno ${subjects.length} předmět${subjects.length === 1 ? '' : subjects.length < 5 ? 'y' : 'ů'} z Edisonu`);
+          setTimeout(() => setImportNotification(null), 5000);
+
+          // Signal back to opener that import succeeded
+          if (event.source) {
+            event.source.postMessage({ type: 'import-success' }, '*');
+          }
+        }
+      }
+      // Handshake: if opener asks if we're ready
+      if (event.data && event.data.type === 'ping-ready') {
+        event.source?.postMessage({ type: 'ready-for-import' }, '*');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    // If opened via scraper (URL has edison-import param), signal readiness to opener
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('edison-import') && window.opener) {
+      window.opener.postMessage({ type: 'ready-for-import' }, '*');
+      // Clean up URL
+      const url = new URL(window.location);
+      url.searchParams.delete('edison-import');
+      window.history.replaceState({}, '', url);
+    }
+
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // --- Load timetable data: imported data takes priority, otherwise demo files ---
+  useEffect(() => {
+    if (importedData.length > 0) {
+      setTimetableData(importedData);
+      return;
+    }
+
     const loadTimetableData = async () => {
       const files = import.meta.glob("./assets/config/*.json");
 
@@ -91,7 +151,7 @@ const App = () => {
     };
 
     loadTimetableData();
-  }, []);
+  }, [importedData]);
 
   //302358
   // item.dto.concreteActivityId
@@ -170,7 +230,38 @@ const App = () => {
     });
   };
 
-  console.log(timetableData)
+  // --- Import handlers ---
+  const handleImport = useCallback((newSubjects) => {
+    setImportedData(prev => {
+      const existing = new Set(prev.map(s => s.title));
+      const merged = [...prev];
+      for (const subj of newSubjects) {
+        if (existing.has(subj.title)) {
+          // Replace existing
+          const idx = merged.findIndex(s => s.title === subj.title);
+          merged[idx] = subj;
+        } else {
+          merged.push(subj);
+        }
+      }
+      return merged;
+    });
+    setSelectedEntries(new Set());
+    setSelectedSubjects(new Set());
+  }, []);
+
+  const handleRemoveSubject = useCallback((title) => {
+    setImportedData(prev => prev.filter(s => s.title !== title));
+    setSelectedEntries(new Set());
+    setSelectedSubjects(new Set());
+  }, []);
+
+  const handleClearAll = useCallback(() => {
+    setImportedData([]);
+    setSelectedEntries(new Set());
+    setSelectedSubjects(new Set());
+  }, []);
+
   // Zformátování dat a přidání barvy
   const allEntries = timetableData
     .map(({ data }) => formatSchedule(data.subjectScheduleTable))
@@ -214,122 +305,13 @@ const App = () => {
     return timeSlots.findIndex(slot => slot.startsWith(time)) + 2;
   }
 
-  // Generate pick script from current selection
-  const generatePickScript = () => {
-    const subjects_array = {};
-    const subject_map = [];
-    
-    // Extract selected entries and group by subject
-    const selectedData = Array.from(selectedEntries).map(key => {
-      return allEntries.find(entry => 
-        `${entry.day}//${entry.startTime}//${entry.abbreviation}//${entry.isLecture}//${entry.teacher}//${entry.educationWeekTitle}` === key
-      );
-    }).filter(Boolean);
-
-    // Build subjects_array and subject_map
-    selectedData.forEach(entry => {
-      // Extract subjectId from filename pattern: subjectId__*.json
-      const matchingFile = timetableData.find(item => 
-        item.title.includes(entry.abbreviation)
-      );
-      
-      if (matchingFile) {
-        const subjectId = matchingFile.title.split('__')[0];
-        console.log(matchingFile,subjectId);
-        const concreteActivityId = entry.activityId.toString();
-        
-        if (!subjects_array[subjectId]) {
-          subjects_array[subjectId] = [];
-          subject_map.push(subjectId);
-        }
-        
-        if (!subjects_array[subjectId].includes(concreteActivityId)) {
-          subjects_array[subjectId].push(concreteActivityId);
-        }
-      }
-    });
-
-    // Generate the script
-    const scriptContent = `(function () {
-
-    let current_subject_idx = 0;
-
-    const readyToclickEvent = new Event('readyToClick');
-
-    var subjects = $('#ns_Z7_SHD09B1A084V90ITII3I3Q30P7_\\\\:subjectsTable a');
-
-    var subjects_array = ${JSON.stringify(subjects_array, null, 8).replace(/"/g, "'")};
-
-    var subject_map = ${JSON.stringify(subject_map).replace(/"/g, "'")}
-
-    function subjectClick(subjectId) {
-        for (var subject = 0; subject < subjects.length; subject++) {
-            if (subjects[subject].attributes.onclick.nodeValue === 'return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectStudyYearObligation(' + subjectId + ');') {
-                subjects[subject].click();
-                console.log('Subject:', subjectId);
-            }
-        }
-    }
-
-    function timeClick(timeId) {
-        var times = $('#ns_Z7_SHD09B1A084V90ITII3I3Q30P7_\\\\:subjectScheduleDiv a');
-        for (var time = 0; time < times.length; time++) {
-            if (times[time].attributes.onclick.nodeValue === 'return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectConcreteActivity(' + timeId + ');') {
-                times[time].click();
-                console.log('Vybrano cviceni:', timeId);
-            }
-        }
-    }
-
-    function waitForElm(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector)) {
-                return resolve(document.querySelector(selector));
-            }
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
-                    observer.disconnect();
-                }
-            });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
-
-    document.body.addEventListener('readyToClick', (e) => {
-        setTimeout(() => {
-            subjectClick(subject_map[current_subject_idx]);
-            waitForElm("a[onclick='return ns_Z7_SHD09B1A084V90ITII3I3Q30P7_selectConcreteActivity(" + subjects_array[subject_map[current_subject_idx]][0] + ");']")
-                .then((elm) => {
-                    setTimeout(() => {
-                        timeClick(subjects_array[subject_map[current_subject_idx]][0]);
-                        current_subject_idx++;
-                        if (current_subject_idx < subject_map.length) {
-                            document.body.dispatchEvent(readyToclickEvent);
-                        }
-                    }, 150);
-                });
-        }, 150);
-    }, false);
-
-    document.body.dispatchEvent(readyToclickEvent);
-
-}());`;
-
-    return scriptContent;
-  }
-
-const handleCopyPickScript = async () => {
-  const ok = await copyPickScript(selectedEntries, allEntries, timetableData);
-  if (ok) alert('Pick script zkopírován do schránky!');
-};
+  const handleCopyPickScript = async () => {
+    const ok = await copyPickScript(selectedEntries, allEntries, timetableData);
+    if (ok) alert('Pick script zkopírován do schránky!');
+  };
 
   return (
     <div className="flex-1 container p-4">
-
       {/* Kopírovat Pick Script */}
       <div className="mb-4 w-[960px]">
         <button
@@ -339,6 +321,31 @@ const handleCopyPickScript = async () => {
           Zkopírovat Pick Script
         </button>
       </div>
+
+      {/* Import notification toast */}
+      {importNotification && (
+        <div className="fixed top-4 right-4 z-50 bg-sky-700 text-white px-4 py-3 rounded-lg shadow-lg">
+          ✓ {importNotification}
+        </div>
+      )}
+
+      {/* Import z Edisonu */}
+      <div className="w-[960px]">
+        <ImportPanel
+          importedData={importedData}
+          onImport={handleImport}
+          onRemove={handleRemoveSubject}
+          onClearAll={handleClearAll}
+          subjectColors={subjectColors}
+        />
+      </div>
+
+      {/* Demo data banner */}
+        {importedData.length === 0 && timetableData.length > 0 && (
+          <div className="mb-4 w-fit p-3 bg-yellow-400 ring-3 ring-yellow-600 rounded-lg text-sm text-yellow-900 font-semibold">
+            ⚠️ Zobrazují se ukázková data. Pro načtení vlastního rozvrhu použijte <b className="text-yellow-700">Import z Edisonu</b> výše.
+          </div>
+        )}
 
       {/* Karty předmětů */}
       <div className="flex flex-wrap gap-3 mb-4 w-[960px]">
