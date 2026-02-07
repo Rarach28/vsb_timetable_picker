@@ -51,7 +51,7 @@ const App = () => {
 
   // Random barvy pro každý předmět viz https://tailwindcss.com/docs/colors
   const subjectColors = {};
-  const colors = ["bg-green-700", "bg-fuchsia-500", "bg-orange-500", "bg-yellow-500", "bg-purple-700", "bg-pink-900", "bg-indigo-500", "bg-violet-900"];
+  const colors = ["bg-green-600", "bg-fuchsia-500", "bg-orange-500", "bg-amber-500", "bg-purple-600", "bg-pink-600", "bg-indigo-500", "bg-violet-600"];
   // Uprava aktualizace time line
   const [currentTimePosition, setCurrentTimePosition] = useState(getCurrentTimePosition());
   useEffect(() => {
@@ -355,7 +355,7 @@ const handleCopyPickScript = async () => {
                   const split = el.split("//");
                   return split[2] === name && split[3] === (type === "C" ? "false" : "true");
                 });
-                return <div key={name+type+i} className={`inline-block w-[28px] rounded ${type === "C" ? (isSelected ? "bg-blue-500" : "text-blue-500") + " border-1 border-blue-500" : (isSelected ? "bg-red-500" : "text-red-500") + " border-1 border-red-500"}`}>{type}</div>
+                return <div key={name+type+i} className={`inline-block font-bold w-[28px] rounded ${type === "C" ? (isSelected ? "bg-blue-600" : "text-blue-400") + " border-2 border-blue-600" : (isSelected ? "bg-rose-600" : "text-rose-400") + " border-2 border-rose-600"}`}>{type}</div>
               })}
             </div>
           </button>
@@ -378,7 +378,7 @@ const handleCopyPickScript = async () => {
             </label>
           </div>
           {timeSlots.map((slot, index) => (
-            <div key={slot} className={`w-[74px] h-full pt-5 text-center text-sm col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
+            <div key={slot} className={`w-[74px] h-full pt-5 text-center text-sm font-semibold col-start-${index + 2} col-span-1 text-center ${index % 2 ? "bg-gray-700" : "bg-gray-800"}`}>
               {slot.split("-").map((part, i) => (
                 <React.Fragment key={i}>
                   {part}
@@ -408,7 +408,7 @@ const handleCopyPickScript = async () => {
 
           return (
             <div key={day} className="grid grid-cols-15 grid-flow-row-dense bg-gray-800 w-[1100px] rounded-lg">
-              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full rounded-l-lg" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
+              <div className="col-start-1 col-span-1 text-center bg-sky-700 w-[70px] py-4 flex flex-col justify-center h-full rounded-l-lg text-xl font-bold" style={{gridRowStart:1, gridRowEnd: 100}}>{day.substring(0, 2)}</div>
               {dayEntries.map((subject, index) => {
                 const key = `${subject.day}//${subject.startTime}//${subject.abbreviation}//${subject.isLecture}//${subject.teacher}//${subject.educationWeekTitle}`;
                 const isSelected = selectedEntries.has(key);
@@ -416,7 +416,7 @@ const handleCopyPickScript = async () => {
                 
                 return <label
                   key={index}
-                  className={`subject m-[3px] border-4 rounded-xl cursor-pointer overflow-hidden transition-colors duration-100 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-red-600 bg-red-700 hover:!bg-red-500" : "border-sky-600 bg-sky-700 hover:!bg-sky-500"} ${isSelected ? `!border-lime-500` : ""} ${isEntryHidden(subject) && "opacity-25"} ${isSelected && subject.isLecture ? "!bg-red-600" : ""} ${isSelected && !subject.isLecture ? "!bg-sky-600" : ""}`}
+                  className={`subject m-[3px] border-4 rounded-xl cursor-pointer overflow-hidden transition-colors duration-100 ${showUnusedClasses && "select-none"} ${subject.isLecture ? "border-rose-700 bg-linear-40 from-gray-800 from-45% to-rose-900 hover:from-rose-600" : "border-sky-700 bg-linear-40 from-gray-800 from-45% to-sky-900 hover:from-sky-600"} ${isEntryHidden(subject) && "opacity-25"} ${isSelected && subject.isLecture ? "from-rose-700" : ""} ${isSelected && !subject.isLecture ? "from-sky-700" : ""}`}
 
                   style={{
                     gridColumnStart: getTimeSlotIndex(subject.startTime.substring(0,5)),
