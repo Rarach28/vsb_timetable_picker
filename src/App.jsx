@@ -432,7 +432,7 @@ const handleCopyPickScript = async () => {
                       disabled={isEntryHidden(subject)}
                     />
                     <span className="flex justify-between items-center mt-2 mb-1">
-                      <span title={subject.title} className={`font-bold w-fit px-[9px] py-[3px] rounded-full ${selectedSubjects.has(subject.abbreviation) ? "!bg-red-400" : subjectColors[subject.abbreviation]}`}>{subject.abbreviation}</span>
+                      <span title={subject.title} className={`font-bold w-fit px-[9px] py-[3px] rounded-full ${subjectColors[subject.abbreviation]}`}>{subject.abbreviation}</span>
                       {subject.educationWeekTitle &&
                         <span className={`font-bold px-[11px] py-[3px] rounded-full ${subject.educationWeekTitle === "Lichý" ? "bg-rose-600" : "bg-emerald-600"}`} title={subject.educationWeekTitle}>{subject.educationWeekTitle.charAt(0)}</span>
                       }
