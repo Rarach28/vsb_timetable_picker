@@ -136,6 +136,8 @@ const App = () => {
       return;
     }
 
+    let cancelled = false;
+
     const loadTimetableData = async () => {
       const files = import.meta.glob("./assets/config/*.json");
 
@@ -147,10 +149,13 @@ const App = () => {
         })
       );
 
-      setTimetableData(loadedData);
+      if (!cancelled) {
+        setTimetableData(loadedData);
+      }
     };
 
     loadTimetableData();
+    return () => { cancelled = true; };
   }, [importedData]);
 
   //302358
@@ -237,13 +242,14 @@ const App = () => {
       const merged = [...prev];
       for (const subj of newSubjects) {
         if (existing.has(subj.title)) {
-          // Replace existing
           const idx = merged.findIndex(s => s.title === subj.title);
           merged[idx] = subj;
         } else {
           merged.push(subj);
         }
       }
+      // Also update timetableData immediately so the grid refreshes without waiting for useEffect
+      setTimetableData(merged);
       return merged;
     });
     setSelectedEntries(new Set());
