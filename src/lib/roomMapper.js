@@ -4,10 +4,12 @@ const isDev = import.meta.env.DEV;
 
 function getApiUrl(roomCode) {
   const query = encodeURIComponent(roomCode);
-  // In dev, use Vite proxy to bypass CORS; in prod, call the API directly
-  return isDev
-    ? `/mapy-api/v0/rooms/autocomplete?query=${query}&language=cs`
-    : `https://mapy.vsb.cz/maps/api/v0/rooms/autocomplete?query=${query}&language=cs`;
+  const apiUrl = `https://mapy.vsb.cz/maps/api/v0/rooms/autocomplete?query=${query}&language=cs`;
+
+  if (isDev) {
+    return `/mapy-api/v0/rooms/autocomplete?query=${query}&language=cs`;
+  }
+  return `https://corsproxy.io/?url=${encodeURIComponent(apiUrl)}`;
 }
 
 function openMapWithId(id) {
