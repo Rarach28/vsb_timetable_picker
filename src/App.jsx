@@ -47,7 +47,7 @@ const App = () => {
 
     if (currentMinutes >= start && currentMinutes < end) {
       const slotProgress = (currentMinutes - start) / (end - start); // Relativní pozice v slotu (0-1)
-      return (i + 1) * 74 + slotProgress * 74; // Posun na správné místo v px
+      return 90 + i * 100 + slotProgress * 100; // 90px první sloupec + pozice slotu (100px každý)
     }
   }
   return null;
@@ -412,7 +412,7 @@ const App = () => {
                 <div
                   className="absolute h-full w-1 bg-red-500"
                   style={{
-                    left: `${(currentTimePosition - 8) }px`,
+                    left: `${currentTimePosition}px`,
                   }}
                 />
               )}
