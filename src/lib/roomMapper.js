@@ -9,7 +9,7 @@ function getApiUrl(roomCode) {
   if (isDev) {
     return `/mapy-api/v0/rooms/autocomplete?query=${query}&language=cs`;
   }
-  return `https://corsproxy.io/?url=${encodeURIComponent(apiUrl)}`;
+  return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`;
 }
 
 function openMapWithId(id) {
